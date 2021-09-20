@@ -1,18 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 
 import Input from '../../components/Forms/Input';
 import Button from '../../components/Forms/Button';
+import TransactionTypeButton from '../../components/TransactionTypeButton';
 
 import { 
   Container,
   Header,
   Title,
   Form,
-  Fields
+  Fields,
+  TransactionTypes
  } from './styles';
 
 const Register: React.FC = () => {
+  const [ transactionType, setTransactionType ] = useState('');
+
+  function handleTransactionTypeSelect(type: 'up' | 'down') { 
+    setTransactionType(type);
+  } 
+
   return (
     <Container>
       <Header>
@@ -26,6 +34,20 @@ const Register: React.FC = () => {
           <Input 
             placeholder='Preço'
           />
+          <TransactionTypes>
+            <TransactionTypeButton
+              type='up'
+              title='Income'
+              isActive={transactionType === 'up'}
+              onPress={() => handleTransactionTypeSelect('up')}
+            />
+            <TransactionTypeButton
+              type='down'
+              title='Outcome'
+              isActive={transactionType === 'down'}
+              onPress={() => handleTransactionTypeSelect('down')}
+            />
+          </TransactionTypes>
         </Fields>
         <Button
           title='Enviar'
