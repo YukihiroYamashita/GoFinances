@@ -6,6 +6,7 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.shape};
   border-radius: 5px;
   padding: 24px 17px;
+  margin-bottom: 16px;
 `;
 
 export const Title = styled.Text`
@@ -16,7 +17,7 @@ export const Title = styled.Text`
 export const Amount = styled.Text`
   font-size: ${RFValue(20)}px;
   font-family: ${({ theme }) => theme.fonts.regular};
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.text_dark};
   margin-top: 2px;
 `;
 
