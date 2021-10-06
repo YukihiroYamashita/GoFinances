@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import Input from '../../components/Forms/Input';
 import Button from '../../components/Forms/Button';
 import TransactionTypeButton from '../../components/TransactionTypeButton';
+import CategorySelect from '../../components/CategorySelect';
 
 import { 
   Container,
@@ -48,6 +49,7 @@ const Register: React.FC = () => {
               onPress={() => handleTransactionTypeSelect('down')}
             />
           </TransactionTypes>
+          <CategorySelect title='Categoria'/>
         </Fields>
         <Button
           title='Enviar'
