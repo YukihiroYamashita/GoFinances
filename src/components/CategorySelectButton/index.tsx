@@ -9,15 +9,16 @@ import {
 
 interface Props { 
   title: string;
+  onPress: () => void;
 }
 
-const CategorySelect: React.FC<Props> = ({ title }) => {
+const CategorySelectButton: React.FC<Props> = ({ title, onPress }) => {
   return (
-    <Container>
+    <Container onPress={onPress}>
       <Category>{title}</Category>
       <Icon name='chevron-down'/>
     </Container>
   );
 }
 
-export default CategorySelect;
+export default CategorySelectButton;

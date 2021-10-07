@@ -2,6 +2,7 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import { categories } from '../../utils/categories';
 
+
 import Button from '../../components/Forms/Button';
 
 import { 
@@ -21,7 +22,7 @@ interface Category {
 }
 
 interface Props {
-  category: string;
+  category: Category;
   setCategory: (category: Category) => void;
   closeSelectCategory: () => void;
 }
@@ -31,6 +32,11 @@ const CategorySelect: React.FC<Props> = ({
   setCategory,
   closeSelectCategory
 }) => {
+  
+  function handleCategorySelect(category: Category) { 
+    setCategory(category);
+  }
+
   return (
     <Container>
       <Header>
@@ -41,7 +47,10 @@ const CategorySelect: React.FC<Props> = ({
         style={{ flex: 1, width: '100%' }}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
-          <Category>
+          <Category
+            onPress={() => handleCategorySelect(item)}
+            isActive={category.key === item.key}
+          >
             <Icon name={item.icon}/>
             <Name>{item.name}</Name>
           </Category>
@@ -51,6 +60,7 @@ const CategorySelect: React.FC<Props> = ({
       <Footer>
         <Button
           title="Selecionar"
+          onPress={closeSelectCategory}
         />
       </Footer>
     </Container>
