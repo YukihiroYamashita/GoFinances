@@ -60,6 +60,22 @@ const Register: React.FC = () => {
     resolver: yupResolver(schema)
   });
 
+  useEffect(() => {
+    async function loadData() { 
+      const data = await AsyncStorage.getItem(dataKey);
+
+      console.log(JSON.parse(data!));
+    };
+
+    loadData();
+
+    // async function removeAll() { 
+    //   await AsyncStorage.removeItem(dataKey);
+    // };
+
+    // removeAll();
+  }, [])
+
   function handleTransactionTypeSelect(type: 'up' | 'down') { 
     setTransactionType(type);
   } 
@@ -81,7 +97,7 @@ const Register: React.FC = () => {
       return Alert.alert("Selecione a categoria");
     }
     
-    const data = {
+    const newTransaction = {
       name,
       amount,
       transactionType,
@@ -89,8 +105,15 @@ const Register: React.FC = () => {
     };
 
     try {
+      const data = await AsyncStorage.getItem(dataKey);
+      const currentData = data ? JSON.parse(data) : [];
 
-      await AsyncStorage.setItem(dataKey, JSON.stringify(data));
+      const dataFormatted = [
+        ...currentData,
+        newTransaction
+      ];
+
+      await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted));
 
     } catch(error) { 
       console.log(error);
@@ -98,15 +121,6 @@ const Register: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    async function loadData() { 
-      const data = await AsyncStorage.getItem(dataKey);
-
-      console.log(JSON.parse(data!));
-    };
-
-    loadData();
-  }, [])
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
