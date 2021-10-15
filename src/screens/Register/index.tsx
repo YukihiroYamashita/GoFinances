@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Keyboard,
   Modal,
   TouchableWithoutFeedback,
   Alert
 } from 'react-native';
-import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
+
+import { useNavigation } from '@react-navigation/native';
+import { useForm } from 'react-hook-form';
 
 import Button from '../../components/Forms/Button';
 import TransactionTypeButton from '../../components/TransactionTypeButton';
@@ -55,26 +58,13 @@ const Register: React.FC = () => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: {errors}
   } = useForm({
     resolver: yupResolver(schema)
   });
 
-  useEffect(() => {
-    async function loadData() { 
-      const data = await AsyncStorage.getItem(dataKey);
-
-      console.log(JSON.parse(data!));
-    };
-
-    loadData();
-
-    // async function removeAll() { 
-    //   await AsyncStorage.removeItem(dataKey);
-    // };
-
-    // removeAll();
-  }, [])
+  const navigation = useNavigation();
 
   function handleTransactionTypeSelect(type: 'up' | 'down') { 
     setTransactionType(type);
@@ -98,10 +88,12 @@ const Register: React.FC = () => {
     }
     
     const newTransaction = {
+      id: String(uuid.v4()),
       name,
       amount,
       transactionType,
-      category: category.key
+      category: category.key,
+      date: new Date()
     };
 
     try {
@@ -115,12 +107,20 @@ const Register: React.FC = () => {
 
       await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted));
 
+      reset();
+      setTransactionType('');
+      setCategory({
+        key: 'category',
+        name: 'Categoria',
+      });
+
+      navigation.navigate("Listagem");
+
     } catch(error) { 
       console.log(error);
       Alert.alert("Não foi possível salvar");
     }
   }
-
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
