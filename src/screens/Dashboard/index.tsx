@@ -26,8 +26,19 @@ export interface DataListProps extends TransactionCardProps {
   id: string;
 }
 
+interface HighlightProps { 
+  amount: string;
+}
+
+interface HighlightData { 
+  entries: HighlightProps,
+  expensives: HighlightProps,
+  total: HighlightProps
+}
+
 const Dashboard: React.FC = () => {
-  const [ data, setData ] = useState<DataListProps[]>([]);
+  const [ transactions, setTransactions ] = useState<DataListProps[]>([]);
+  const [ highlightData, setHighlightData ] = useState<HighlightData>({} as HighlightData);
 
   useEffect(() => {
     loadTransactions();
@@ -42,8 +53,18 @@ const Dashboard: React.FC = () => {
     const response = await AsyncStorage.getItem(dataKey);
     const transactions = response ? JSON.parse(response) : [];
     
+    let entriesTotal = 0;
+    let expensiveTotal = 0;
+
     const transactionsFormatted: DataListProps[] = transactions
       .map((item: DataListProps) => {
+
+        if(item.type === 'positive') { 
+          entriesTotal += Number(item.amount);
+        } else {
+          expensiveTotal += Number(item.amount);
+        }
+
         const amount = Number(item.amount).toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL'
@@ -65,7 +86,29 @@ const Dashboard: React.FC = () => {
         }
       });
     
-    setData(transactionsFormatted); 
+    const total = entriesTotal - expensiveTotal;
+
+    setTransactions(transactionsFormatted); 
+    setHighlightData({
+      entries: { 
+        amount: entriesTotal.toLocaleString('pt-BR', { 
+          style: 'currency',
+          currency: 'BRL'
+        })
+      },
+      expensives: { 
+        amount: expensiveTotal.toLocaleString('pt-BR', { 
+          style: 'currency',
+          currency: 'BRL'
+        })
+      },
+      total: { 
+        amount: total.toLocaleString('pt-BR', { 
+          style: 'currency',
+          currency: 'BRL'
+        })
+      },
+    })
   }
 
   return (
@@ -91,19 +134,19 @@ const Dashboard: React.FC = () => {
       <HighlightCards>
         <HighlightCard 
           title='Entradas'
-          amount='R$ 17.400,00'
+          amount={highlightData.entries.amount}
           lastTransaction='Ultima entrada dia 13 de abril'
           type='up'
         />
         <HighlightCard 
           title='Saídas'
-          amount='R$ 1.259,00'
+          amount={highlightData.expensives.amount}
           lastTransaction='Ultima entrada saída 03 de abril'
           type='down'
         />
         <HighlightCard 
           title='Total'
-          amount='R$ 16.141,00'
+          amount={highlightData.total.amount}
           lastTransaction='01 à 16 de abril'
           type='total'
         />
@@ -111,7 +154,7 @@ const Dashboard: React.FC = () => {
       <Transactions>
         <Title>Listagem</Title>
         <TransactionsList
-          data={data}
+          data={transactions}
           keyExtractor={item => item.id}
           renderItem={({ item }) => <TransactionCard data={item}/>}
         >
