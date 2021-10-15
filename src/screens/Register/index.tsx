@@ -53,7 +53,6 @@ const Register: React.FC = () => {
     name: 'Categoria',
   });
 
-  const dataKey = '@gofinances:transactions';
 
   const {
     control,
@@ -97,6 +96,8 @@ const Register: React.FC = () => {
     };
 
     try {
+      const dataKey = '@gofinances:transactions';
+      
       const data = await AsyncStorage.getItem(dataKey);
       const currentData = data ? JSON.parse(data) : [];
 
