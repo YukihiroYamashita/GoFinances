@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+
 import HighlightCard from '../../components/HighlightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
 
@@ -27,10 +29,13 @@ export interface DataListProps extends TransactionCardProps {
 const Dashboard: React.FC = () => {
   const [ data, setData ] = useState<DataListProps[]>([]);
 
-
   useEffect(() => {
     loadTransactions();
   }, []);
+
+  useFocusEffect(useCallback(() => {
+    loadTransactions();
+  }, []));
 
   async function loadTransactions() {
     const dataKey = '@gofinances:transactions';

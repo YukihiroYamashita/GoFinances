@@ -65,7 +65,7 @@ const Register: React.FC = () => {
 
   const navigation = useNavigation();
 
-  function handleTransactionTypeSelect(type: 'up' | 'down') { 
+  function handleTransactionTypeSelect(type: 'positive' | 'negative') { 
     setTransactionType(type);
   } 
 
@@ -90,7 +90,7 @@ const Register: React.FC = () => {
       id: String(uuid.v4()),
       name,
       amount,
-      transactionType,
+      type: transactionType,
       category: category.key,
       date: new Date()
     };
@@ -152,14 +152,14 @@ const Register: React.FC = () => {
             <TransactionTypeButton
               type='up'
               title='Income'
-              isActive={transactionType === 'up'}
-              onPress={() => handleTransactionTypeSelect('up')}
+              isActive={transactionType === 'positive'}
+              onPress={() => handleTransactionTypeSelect('positive')}
             />
             <TransactionTypeButton
               type='down'
               title='Outcome'
-              isActive={transactionType === 'down'}
-              onPress={() => handleTransactionTypeSelect('down')}
+              isActive={transactionType === 'negative'}
+              onPress={() => handleTransactionTypeSelect('negative')}
             />
           </TransactionTypes>
           <CategorySelectButton 
