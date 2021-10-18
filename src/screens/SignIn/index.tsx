@@ -5,13 +5,16 @@ import AppleSvg from '../../assets/apple.svg';
 import GoogleSvg from '../../assets/google.svg';
 import LogoSvg from '../../assets/logo.svg';
 
+import SignInSocialButton from '../../components/SignInSocialButton';
+
 import { 
   Container,
   Header,
   TitleWrapper,
   Title,
   SignInTitle,
-  Footer
+  Footer,
+  FooterWrapper
 } from './styles';
 
 const SignIn: React.FC = () => {
@@ -35,7 +38,16 @@ const SignIn: React.FC = () => {
         </SignInTitle>
       </Header>
       <Footer>
-
+        <FooterWrapper>
+          <SignInSocialButton
+            title="Entrar com o Google"
+            svg={GoogleSvg}
+          />
+          <SignInSocialButton
+            title="Entrar com a Apple"
+            svg={AppleSvg}
+          />
+        </FooterWrapper>
       </Footer>
     </Container>
   );
