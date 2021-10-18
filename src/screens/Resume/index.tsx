@@ -4,6 +4,8 @@ import { VictoryPie } from 'victory-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTheme } from 'styled-components';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { addMonths, format, subMonths } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 import { categories } from '../../utils/categories';
 
@@ -40,12 +42,21 @@ interface CategoryData {
 
 const Resume: React.FC = () => {
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([])
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const { colors } = useTheme();
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [selectedDate]);
+
+  function handleDateChange(action: 'next' | 'previous') { 
+    if(action === 'next') { 
+      setSelectedDate(addMonths(selectedDate, 1));
+    } else { 
+      setSelectedDate(subMonths(selectedDate, 1));
+    }
+  }
 
   async function loadData() { 
     const dataKey = '@gofinances:transactions';
@@ -54,9 +65,12 @@ const Resume: React.FC = () => {
 
     const totalByCategory: CategoryData[] = [];
 
-
     const expensives = responseFormatted
-      .filter((expensive: TransactionData) => expensive.type === 'negative');
+      .filter((expensive: TransactionData) => 
+        expensive.type === 'negative' && 
+        new Date(expensive.date).getMonth() === selectedDate.getMonth() &&
+        new Date(expensive.date).getFullYear() === selectedDate.getFullYear()
+      );
 
     const expensiveTotal = expensives
       .reduce((accumulator: number, expensive: TransactionData) => {
@@ -110,13 +124,13 @@ const Resume: React.FC = () => {
       >
 
         <MonthSelect>
-          <MonthSelectButton>
+          <MonthSelectButton onPress={() => handleDateChange('previous')}>
             <SelectIcon name="chevron-left" />
           </MonthSelectButton>
 
-          <Month>Outubro</Month>
+          <Month>{format(selectedDate, 'MMMM, yyyy', { locale: ptBR })}</Month>
 
-          <MonthSelectButton>
+          <MonthSelectButton onPress={() => handleDateChange('next')}>
             <SelectIcon name="chevron-right" />
           </MonthSelectButton>
         </MonthSelect>
