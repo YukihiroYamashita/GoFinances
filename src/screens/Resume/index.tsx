@@ -44,22 +44,17 @@ interface CategoryData {
 }
 
 const Resume: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([])
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const { colors } = useTheme();
 
-  useEffect(() => {
-    loadData();
-  }, [selectedDate]);
-
   useFocusEffect(useCallback(() => {
     loadData();
-  }, []));
+  }, [selectedDate]));
 
   function handleDateChange(action: 'next' | 'previous') { 
-    setIsLoading(true);
     if(action === 'next') { 
       setSelectedDate(addMonths(selectedDate, 1));
     } else { 
@@ -68,6 +63,7 @@ const Resume: React.FC = () => {
   }
 
   async function loadData() { 
+    setIsLoading(true);
     const dataKey = '@gofinances:transactions';
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted = response ? JSON.parse(response) : [];
