@@ -16,6 +16,8 @@ import {
 
 import theme from './src/global/styles/theme';
 
+import { AuthContext } from './src/AuthContext';
+
 import { NavigationContainer } from '@react-navigation/native';
 
 import AppRoutes from './src/routes/app.routes';
@@ -38,7 +40,9 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <NavigationContainer>
         <StatusBar barStyle='light-content'/>
-        <SignIn />
+        <AuthContext.Provider value={[]}>
+          <SignIn />
+        </AuthContext.Provider>
       </NavigationContainer>
     </ThemeProvider>
   );
