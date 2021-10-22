@@ -8,7 +8,6 @@ import Dashboard from '../screens/Dashboard';
 import Register from '../screens/Register';
 import Resume from '../screens/Resume';
 
-
 const { Navigator, Screen } = createBottomTabNavigator();
 
 const AppRoutes: React.FC = () => {
