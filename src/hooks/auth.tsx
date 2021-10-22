@@ -2,7 +2,8 @@ import React, {
   createContext,
   ReactNode,
   useContext,
-  useState
+  useState,
+  useEffect
 } from 'react';
 
 import * as AuthSession from 'expo-auth-session';
@@ -40,6 +41,7 @@ const AuthContext = createContext({} as IAuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) { 
   const [ user, setUser ] = useState<User>({} as User);
+  const [ userStorageLoading, setUserStorageLoading ] = useState(true);
 
   async function signInWithGoogle() {
     try { 
@@ -95,7 +97,23 @@ function AuthProvider({ children }: AuthProviderProps) {
     } catch(error) { 
       throw new Error(error);
     }
-  }
+  };
+
+  useEffect(() => {
+    async function loadUserStorageData() { 
+      const userStorage = await AsyncStorage.getItem('@gofinances:user');
+
+      if(userStorage) { 
+        const userLogged = JSON.parse(userStorage) as User;
+
+        setUser(userLogged);
+
+        setUserStorageLoading(false);
+      }
+    };
+
+    loadUserStorageData();
+  }, []);
 
   return (
     <AuthContext.Provider value={{ 
