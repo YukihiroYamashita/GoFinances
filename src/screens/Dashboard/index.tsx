@@ -7,6 +7,8 @@ import { useTheme } from 'styled-components';
 import HighlightCard from '../../components/HighlightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
 
+import { useAuth } from '../../hooks/auth'
+
 import { 
   Container,
   Header,
@@ -24,6 +26,7 @@ import {
   LogoutButton,
   LoadContainer
 } from './styles';
+
 
 export interface DataListProps extends TransactionCardProps { 
   id: string;
@@ -46,6 +49,7 @@ const Dashboard: React.FC = () => {
   const [ isLoading, setIsLoading ] = useState<boolean>(true);
 
   const { colors } = useTheme();
+  const { signOut, user } = useAuth();
 
   useEffect(() => {
     loadTransactions();
@@ -159,15 +163,15 @@ const Dashboard: React.FC = () => {
             <UserWrapper>
               <UserInfo>
                 <Photo
-                  source={{ uri: 'https://avatars.githubusercontent.com/u/28933515?v=4' }}
+                  source={{ uri: user.photo }}
                 />
                 <User>
                   <UserGreeting>Olá</UserGreeting>
-                  <UserName>Yukihiro</UserName>
+                  <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
 
-              <LogoutButton onPress={() => {}}>
+              <LogoutButton onPress={signOut}>
                 <Icon name="power"/>
               </LogoutButton>
 
