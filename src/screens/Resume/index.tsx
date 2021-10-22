@@ -9,6 +9,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { addMonths, format, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
+import { useAuth } from '../../hooks/auth';
+
 import { categories } from '../../utils/categories';
 
 import HistoryCard from './HistoryCard';
@@ -49,6 +51,7 @@ const Resume: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const { colors } = useTheme();
+  const { user } = useAuth();
 
   useFocusEffect(useCallback(() => {
     loadData();
@@ -64,7 +67,7 @@ const Resume: React.FC = () => {
 
   async function loadData() { 
     setIsLoading(true);
-    const dataKey = '@gofinances:transactions';
+    const dataKey = `@gofinances:transactions_user:${user.id}`;
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted = response ? JSON.parse(response) : [];
 
